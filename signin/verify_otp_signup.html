@@ -58,6 +58,93 @@ for (let i = 0; i < 2000; i++) {
     
     grid.appendChild(div);
 }
+
+function verify_otp(){
+    const user_email = sessionStorage.getItem("user_email");
+    const user_name = sessionStorage.getItem("user_name");
+    const user_p_number = sessionStorage.getItem("user_p_number");
+    const user_h_number = sessionStorage.getItem("user_h_number");
+    const user_r_number = sessionStorage.getItem("user_r_number");
+    const user_pass = sessionStorage.getItem("user_pass");
+    const statusReport = document.getElementById("statusReport");
+    const verify_bttn = document.getElementById("VERIFY-BTN");
+    const otp = document.getElementById("enterotp-id").value.trim();
+
+    if (!otp) {
+                alert("Please enter the OTP sent to your mail.");
+                return;
+    }
+
+    if (!user_email) {
+                alert("Session expired or invalid access. Returning to registration.");
+                window.location.href = "signUp.html";
+                return;
+    }
+
+    verify_bttn.disabled = true;
+    verify_bttn.innerText = "SENDING...";
+    statusReport.style.color = "#e67e22"; // Orange loading color
+    statusReport.innerText = "Verifying database status...";
+
+    fetch("https://otp-api-kc55.onrender.com/verify_otp_signup", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            // Since your live backend takes a raw JSON-string body type:
+            body: JSON.stringify({ 
+                otp : otp ,
+                 email : user_email,
+                 h_number : user_h_number,
+                 r_number : user_r_number,
+                 p_number : user_p_number,
+                 password : user_pass,
+                 name : user_name
+                })
+        })
+        .then(async response => {
+            const data = await response.json();
+            if (!response.ok) {
+                // Extracts explicit structural errors from FastAPI validations
+                throw new Error(data.message || data.details || `Error: ${response.status}`);
+            }
+            return data;
+        })
+        .then(data => {
+        // --- UPDATED LOGIC FOR THE NOT FOUND ALERT ---
+        if (data.message && data.message.includes("otp verified and account registered")) {
+            statusReport.style.color = "#2ecc71"; 
+            statusReport.innerText = "otp verified, user registered , redirecting to home page";
+
+            sessionStorage.clear();
+
+            setTimeout(() => {
+                window.location.href = "home.html";
+            }, 1500);
+        }
+        else if (data.message && data.message.includes("otp not verified")){
+            status.style.color = "#e74c3c";
+            status.innerText = "otp was invalid , please retry";
+
+            verify_bttn.disabled = false;
+            verify_bttn.innerText = "VERIFY-OTP";
+
+
+        }
+        else {
+            alert("Registration issue: " + (data.message || "Unknown error context. Please reach out to support.(bitlx4@gmail.com)"));
+                    verify_bttn.disabled = false;
+                    verify_bttn.innerText = "VERIFY-OTP";
+        }
+        })
+            .catch(err => {
+                console.error(err);
+                alert("Connection error encountered while saving account details.");
+                verify_bttn.disabled = false;
+                verify_bttn.innerText = "VERIFY-OTP";
+                statusReport.innerText = "";
+            });
+        }
     </script>
 
 </body>
