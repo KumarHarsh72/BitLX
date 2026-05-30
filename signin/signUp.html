@@ -3,13 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign-Up-page</title>
+    <title>Sign-In-page</title>
     <link rel="stylesheet" href="signUp.css">
-
-    <link rel="icon" type="image/png" href="logo.gif.gif">
 
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+    .status-msg {
+        margin-top: 15px;
+        font-family: 'Roboto', sans-serif;
+        font-size: 14px;
+        text-align: center;
+        font-weight: 500;
+    }
+
     </style>
 <body>
 
@@ -61,17 +68,17 @@
         <div class="password-id-div">
             <input id="password-id" type="text" placeholder="Enter Password">
         </div>
-        <button class="signUp">
+        <button class="signUp" id="signUp" onclick="otprequest()">
             SIGN UP
         </button>
+
+        <div id="statusReport" class="status-msg"></div>
 
 
     </div>
 
     <script>
         const grid = document.querySelector(".hack-box");
-
-// An array heavily weighted with glitchy data blocks and terminal errors
 const glitchContent = ["0", "1", "█", "▒", "░", "Ø", "×", "¿", "$", "_", "!", "▀", " ", " "];
 
 for (let i = 0; i < 2000; i++) {
@@ -83,6 +90,92 @@ for (let i = 0; i < 2000; i++) {
     div.innerText = randomGlitch;
     
     grid.appendChild(div);
+}
+function otprequest(){
+    const name = document.getElementById("enter-name-id").value.trim();
+    const h_number = document.getElementById("enter-hostelNo-id").value;
+    const r_number = document.getElementById("enter-roomNo-id").value.trim();
+    const p_number = document.getElementById("enter-phoneNo-id").value.trim();
+    const email = document.getElementById("enter-mail-id").value.trim();
+    const pass = document.getElementById("password-id").value.trim();
+    const signup_bttn = document.getElementById("signUp");
+    const statusReport = document.getElementById("statusReport");
+
+    if(!name || !h_number || !r_number || !p_number || !email || !pass){
+        alert("please enter all the credentials");
+        return;
+    }
+
+    signup_bttn.disabled=true;
+    signup_bttn.innerText="Sending OTP...";
+    statusReport.style.color = "#e67e22"; 
+    statusReport.innerText = "Verifying database status...";
+
+    fetch("https://signup-api-py.onrender.com/signup", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email: email })
+        })
+        .then(async response => {
+            const data = await response.json();
+            if (!response.ok) {
+                // Extracts explicit structural errors from FastAPI validations
+                throw new Error(data.message || data.details || `Error: ${response.status}`);
+            }
+            return data;
+        })
+
+    .then(data => {
+        if (data.message && data.message.includes("the email should end with @bitmesra.ac.in")){
+            alert("please add an authosrized institute mail id that ends with @bitmesra.ac.in")
+        }
+
+        else if (data.message && data.message.includes("otp send succesfully")) {
+    
+            statusReport.style.color = "#e74c3c"; 
+            statusReport.innerText = "otp sent, redirecting to verification page";
+    
+            setTimeout(() => {
+                window.location.href = "verify_otp_signup.html";
+            }, 1500);
+        }
+
+        else if (data.message && data.message.includes("otp is already sent please try again after 5 minute...")){
+            alert("otp already sent if not received then try after 5 minute , otherwise can contact bitlx4@gmail.com");
+        }
+
+        else if (data.message && data.message.includes("user exist")){
+            alert("you are already a user , press ok to get to sign in page");
+
+            setTimeout(() => {
+                window.location.href = "signIn.html"
+            }
+            ,1500
+            );
+        }
+
+        else if (data.message && data.message.includes("otp not send ")){
+            alert("otp is not sent to your mail please enter sign up again");
+
+            setTimeout(() => {
+                window.location.href = "signUp.html"
+            }
+            ,1500
+            );
+        }
+
+        else if (data.message && data.message.includes("Database connection failed")){
+            alert("error code:db!con please send this error and screenshot with it to bitlx4@gmail.com")
+        }
+
+        else {
+            alert("error code: somethingHappenAtSignUp please send a screenshot of this error to bitlx4@gmail.com")
+        }
+    })
+
+
 }
     </script>
 
