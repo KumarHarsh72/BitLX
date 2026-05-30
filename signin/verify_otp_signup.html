@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign-In-page</title>
+    <link rel="stylesheet" href="verify_otp_signup.css">
+
+    <link rel="icon" type="image/png" href="logo.gif.gif">
+
+    </head>
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+        .status-msg {
+            margin-top: 15px;
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+            text-align: center;
+            font-weight: 500;
+        }
+    </style>
+<body>
+
+    <div class="hack-box">
+        
+
+    </div>
+
+    <div class="forget-password">
+        <div class="welcome">
+            Welcome to BIT_LX
+        </div>
+        <div class="forget-password-text">
+            SIGN UP
+        </div>
+        <div class="enterotp-div">
+            <input id="enterotp-id" type="text" placeholder="Enter OTP" >
+        </div>
+            <button class="verify-otp" id="VERIFY-BTN" onclick="verify_otp()">
+                VERIFY-OTP
+            </button>
+        <div id="statusReport" class="status-msg"></div>
+
+    </div>
+
+    <script>
+        const grid = document.querySelector(".hack-box");
+const glitchContent = ["0", "1", "█", "▒", "░", "Ø", "×", "¿", "$", "_", "!", "▀", " ", " "];
+
+for (let i = 0; i < 2000; i++) {
+    const div = document.createElement("div");
+    div.classList.add("box");
+    
+    // Pick a random glitch element
+    const randomGlitch = glitchContent[Math.floor(Math.random() * glitchContent.length)];
+    div.innerText = randomGlitch;
+    
+    grid.appendChild(div);
+}
+    </script>
+
+</body>
+</html>
