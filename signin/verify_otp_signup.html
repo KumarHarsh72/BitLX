@@ -91,7 +91,7 @@ function verify_otp(){
             headers: {
                 "Content-Type": "application/json"
             },
-            // Since your live backend takes a raw JSON-string body type:
+
             body: JSON.stringify({ 
                 otp : otp ,
                  email : user_email,
@@ -102,22 +102,8 @@ function verify_otp(){
                  name : user_name
                 })
         })
-        .then(async response => {
-            const text = await response.text();
-            let data;
-        
-            try {
-                data = JSON.parse(text);
-            } catch {
-                throw new Error("Invalid JSON from server: " + text);
-            }
-        
-            if (!response.ok) {
-                throw new Error(data.message || data.detail || "Server error");
-            }
-        
-            return data;
-        })
+        .then(res => res.json())
+
         .then(data => {
         if (!data || !data.message) {
         alert("Registration issue: Received an invalid structural response from the registration server.");
@@ -125,7 +111,7 @@ function verify_otp(){
         verify_bttn.innerText = "VERIFY-OTP";
         return;
         }
-        // --- UPDATED LOGIC FOR THE NOT FOUND ALERT ---
+   
         if (data.message && data.message.includes("otp verified and account registered")) {
             statusReport.style.color = "#2ecc71"; 
             statusReport.innerText = "otp verified, user registered , redirecting to home page";
