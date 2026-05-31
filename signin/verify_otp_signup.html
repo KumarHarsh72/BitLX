@@ -86,7 +86,7 @@ function verify_otp(){
     statusReport.style.color = "#e67e22"; // Orange loading color
     statusReport.innerText = "Verifying database status...";
 
-    fetch("https://otp-api-kc55.onrender.com/verify_otp_signup", {
+    fetch("https://signup-api-py.onrender.com/verify_otp_signup", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
