@@ -1,0 +1,114 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Roboto", sans-serif;
+    background-color: #ffffff;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+/* 1. Header GIF Centering Wrapper */
+#top-banner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+#top-banner img {
+    max-width: 450px;
+    height: auto;
+}
+
+/* 2. Flexbox row splitting structure layout */
+.main-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 20px;
+}
+
+/* Controls the Left & Right graphic side panels */
+.side-column {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 40px; /* Aligns them nicely with the middle content block */
+}
+
+.display-img {
+    width: 100%;
+    max-width: 320px;
+    height: auto;
+    object-fit: contain;
+}
+
+/* 3. Central Vertical Stack Column */
+.center-column {
+    flex: 1.5; /* Slightly wider to keep text readable */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.center-banner {
+    margin-bottom: 20px;
+}
+
+.center-banner img {
+    max-width: 200px;
+    height: auto;
+}
+
+/* Paragraph Content Typographical Adjustments */
+.description-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #2c3e50;
+    margin-bottom: 25px;
+    font-weight: 400;
+    padding: 0 10px;
+}
+
+/* 4. Bottom Squared QR Alignment Core */
+.qr-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 180px;
+    height: 180px;
+    border: 2px solid #f0f0f0;
+    padding: 8px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.qr-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Adaptive Breakpoint rules for Smaller Display Views */
+@media (max-width: 768px) {
+    .main-wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .side-column {
+        padding-top: 10px;
+    }
+}
