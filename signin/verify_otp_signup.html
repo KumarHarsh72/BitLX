@@ -111,6 +111,12 @@ function verify_otp(){
             return data;
         })
         .then(data => {
+        if (!data || !data.message) {
+        alert("Registration issue: Received an invalid structural response from the registration server.");
+        verify_bttn.disabled = false;
+        verify_bttn.innerText = "VERIFY-OTP";
+        return;
+        }
         // --- UPDATED LOGIC FOR THE NOT FOUND ALERT ---
         if (data.message && data.message.includes("otp verified and account registered")) {
             statusReport.style.color = "#2ecc71"; 
