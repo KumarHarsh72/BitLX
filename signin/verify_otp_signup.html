@@ -123,8 +123,8 @@ function verify_otp(){
             }, 1500);
         }
         else if (data.message && data.message.includes("otp not verified")){
-            status.style.color = "#e74c3c";
-            status.innerText = "otp was invalid , please retry";
+            statusReport.style.color = "#e74c3c";
+            statusReport.innerText = "otp was invalid , please retry";
 
             verify_bttn.disabled = false;
             verify_bttn.innerText = "VERIFY-OTP";
