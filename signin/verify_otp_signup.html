@@ -143,9 +143,9 @@ function verify_otp(){
                     verify_bttn.innerText = "VERIFY-OTP";
         }
         })
-            .catch(err => {
+        .catch(err => {
                 console.error(err);
-                alert("Connection error encountered while saving account details.");
+                alert("Connection error encountered while saving account details. please reach out to support.(bitlx4@gmail.com)");
                 verify_bttn.disabled = false;
                 verify_bttn.innerText = "VERIFY-OTP";
                 statusReport.innerText = "";
