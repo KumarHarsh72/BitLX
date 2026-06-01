@@ -10,6 +10,14 @@
 
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+    .status-msg {
+        margin-top: 15px;
+        font-family: 'Roboto', sans-serif;
+        font-size: 14px;
+        text-align: center;
+        font-weight: 500;
+    }
     </style>
 <body>
 
@@ -41,9 +49,11 @@
             </a>
         </div>
 
-        <button class="login">
+        <button class="login" id="login" onclick="verify()">
             Log in
         </button>
+
+        <div id="statusReport" class="status-msg"></div>
 
 
     </div>
@@ -55,6 +65,85 @@
             div.classList.add("box");
             grid.appendChild(div);
         }
+        function verify(){
+            const email = document.getElementById("sign-in-id").value.trim();
+            const pass = document.getElementById("password-id").value.trim();
+
+            const status = document.getElementById("statusReport");
+            const login_bttn = document.getElementById("login");
+
+            const bitmesraRegex = /^[a-zA-Z0-9._%+-]+@bitmesra\.ac\.in$/;    // verifying string strictly ends with @bitmesra.ac.in
+
+            if(!email || !pass){
+                alert("please enter all the credentials")
+
+                return; // terminates js if user has not enterd any one credentials
+            }
+
+            if (!email || !bitmesraRegex.test(email)) {  // verifying if user has entered email and it ends with @bitmessra.ac.in
+                alert("Please enter a valid institutional email ending with @bitmesra.ac.in");
+                return; // Terminates js immediately before hitting the network layer and the js stops
+            }
+
+            login_bttn.disabled = true;
+            login_bttn.innerText = "VERIFYING...";
+            status.style.color = "#e67e22"; // Orange loading color
+            status.innerText = "Verifying database status...";
+
+            fetch('https://signin-api-5up2.onrender.com/signin', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: email, 
+                password: pass      
+            })
+            })
+            .then(async response => {
+            const data = await response.json();
+            if (!response.ok) {
+                // Extracts explicit structural errors from FastAPI validations
+                throw new Error(data.message || data.details || `Error: ${response.status}`);
+            }
+            return data;
+            })
+            .then(data => {
+            if (data.message && data.message.includes("user exist")){
+                status.innerText = "VERIFIED";
+                status.style.color = "#2ecc71";
+
+                setTimeout(() => {
+                window.location.href = "home.html";
+                }, 1500);
+            }
+
+            else {
+                status.innerText = "Not a User";
+                status.style.color = "#FF0000";
+
+                setTimeout(() => {
+                    alert("click ok to redirect to sign up page");
+
+        
+                    setTimeout(() => {
+                    window.location.href = "signUp.html";
+                    }, 1500);
+
+                }, 200);
+            }
+            })
+
+            .catch(err => {
+                console.error(err);
+                alert("Connection error encountered while saving account details.");
+                verify_bttn.disabled = false;
+                verify_bttn.innerText = "Log In";
+                statusReport.innerText = "";
+            });
+
+            }
+
     </script>
 
 </body>
